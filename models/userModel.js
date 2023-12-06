@@ -21,7 +21,8 @@ const createUser = (userData) => {
 
 const getAllUsers = () => {
   return new Promise((resolve, reject) => {
-    const query = 'SELECT * FROM users'
+    const query =
+      'SELECT id, name, email, lastLoginTime, registrationTime, status FROM users'
     db.query(query, (error, results) => {
       if (error) {
         reject(error)
@@ -58,4 +59,37 @@ const updateUserStatus = (userId, status) => {
   })
 }
 
-module.exports = { createUser, findUserByEmail, updateUserStatus, getAllUsers }
+const updateLastLoginTime = (userId) => {
+  return new Promise((resolve, reject) => {
+    const query = 'UPDATE users SET lastLoginTime = NOW() WHERE id = ?'
+    db.query(query, [userId], (error, results) => {
+      if (error) {
+        reject(error)
+      } else {
+        resolve(results)
+      }
+    })
+  })
+}
+
+const deleteUser = (userId) => {
+  return new Promise((resolve, reject) => {
+    const query = 'DELETE FROM users WHERE id = ?'
+    db.query(query, [userId], (error, results) => {
+      if (error) {
+        reject(error)
+      } else {
+        resolve(results)
+      }
+    })
+  })
+}
+
+module.exports = {
+  createUser,
+  findUserByEmail,
+  updateUserStatus,
+  getAllUsers,
+  updateLastLoginTime,
+  deleteUser
+}

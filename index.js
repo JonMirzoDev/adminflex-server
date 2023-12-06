@@ -1,28 +1,21 @@
 const express = require('express')
-const bodyParser = require('body-parser')
 const cors = require('cors')
-const { getAllUsers } = require('./userQueries')
+const authRoutes = require('./routes/authRoutes')
+const userRoutes = require('./routes/userRoutes')
+const authenticateToken = require('./middlewares/authenticateToken')
 
 const app = express()
 const port = process.env.PORT || 3000
 
 app.use(cors())
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(express.json())
 
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to the application.' })
 })
 
-// Test route to fetch all users
-app.get('/test-db', (req, res) => {
-  getAllUsers()
-    .then((users) => res.json(users))
-    .catch((error) => {
-      console.error('Database Error:', error)
-      res.status(500).send('Error in fetching users')
-    })
-})
+app.use('/api/auth', authRoutes)
+app.use('/api/users', authenticateToken, userRoutes)
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`)
