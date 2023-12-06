@@ -54,6 +54,7 @@ const login = async (req, res) => {
       return res.status(401).send('Password is incorrect')
     }
 
+    await userModel.updateLastLoginTime(user.id)
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
       expiresIn: '1h'
     })
