@@ -5,7 +5,7 @@ const userRoutes = require('./routes/userRoutes')
 const authenticateToken = require('./middlewares/authenticateToken')
 
 const app = express()
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3333
 
 app.use(cors())
 app.use(express.json())
