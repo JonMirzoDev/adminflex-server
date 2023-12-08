@@ -3,7 +3,16 @@ const userModel = require('../models/userModel')
 // Controller to get all users
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await userModel.getAllUsers()
+    const usersArr = await userModel.getAllUsers()
+    const usersArray = await usersArr.fetchAll()
+    const users = usersArray.map((user) => ({
+      id: user[0],
+      name: user[1],
+      email: user[2],
+      lastLoginTime: user[3],
+      registrationTime: user[4],
+      status: user[5]
+    }))
     res.json(users)
   } catch (error) {
     res.status(500).send(error.message)

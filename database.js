@@ -1,20 +1,42 @@
 const mysqlx = require('@mysql/xdevapi')
 
-;(async () => {
-  try {
-    const session = await mysqlx.getSession({
-      host: process.env.STACKHERO_MYSQL_HOST,
-      port: process.env.STACKHERO_MYSQL_PORT,
-      user: process.env.STACKHERO_MYSQL_USER,
-      password: process.env.STACKHERO_MYSQL_ROOT_PASSWORD,
-      ssl: true
-    })
+const config = {
+  host: process.env.STACKHERO_MYSQL_HOST,
+  port: process.env.STACKHERO_MYSQL_PORT,
+  user: process.env.STACKHERO_MYSQL_USER,
+  password: process.env.STACKHERO_MYSQL_ROOT_PASSWORD,
+  schema: process.env.DB_NAME,
+  ssl: true
+}
 
-    console.log('Successfully connected to the database.')
+let session = null
 
-    await session.close()
-  } catch (err) {
-    console.error('Error connecting to the database:', err)
-    process.exit(1)
+const getSession = async () => {
+  if (session === null) {
+    try {
+      session = await mysqlx.getSession(config)
+      console.log('Successfully connected to the database.')
+    } catch (err) {
+      console.error('Error connecting to the database:', err)
+      throw err // Rethrow the error to handle it where getSession is called
+    }
   }
-})()
+  return session
+}
+
+const closeSession = async () => {
+  if (session !== null) {
+    try {
+      await session.close()
+      console.log('Database session closed.')
+    } catch (err) {
+      console.error('Error closing the database session:', err)
+      throw err // Rethrow the error to handle it where closeSession is called
+    }
+  }
+}
+
+module.exports = {
+  getSession,
+  closeSession
+}

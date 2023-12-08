@@ -38,6 +38,7 @@ const register = async (req, res) => {
 }
 
 const login = async (req, res) => {
+  console.log('req: ', req.body)
   try {
     const { error } = loginSchema.validate(req.body)
     if (error) {
@@ -48,6 +49,9 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(401).send('User does not exist')
     }
+
+    console.log('Plain password:', req.body.password)
+    console.log('Hashed password:', user.password)
 
     const match = await bcrypt.compare(req.body.password, user.password)
     if (!match) {
