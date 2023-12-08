@@ -1,11 +1,10 @@
 const mysql = require('mysql')
-require('dotenv').config()
 
 const dbConnection = mysql.createConnection({
-  host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'my_app_db'
+  host: process.env.STACKHERO_MYSQL_HOST,
+  user: process.env.STACKHERO_MYSQL_ROOT_PASSWORD,
+  password: process.env.STACKHERO_MYSQL_ROOT_PASSWORD,
+  database: process.env.DB_NAME
 })
 
 dbConnection.connect((error) => {
