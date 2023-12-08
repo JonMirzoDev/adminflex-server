@@ -1,15 +1,20 @@
-const mysql = require('mysql')
+const mysqlx = require('@mysql/xdevapi')
 
-const dbConnection = mysql.createConnection({
-  host: process.env.STACKHERO_MYSQL_HOST,
-  user: process.env.STACKHERO_MYSQL_ROOT_PASSWORD,
-  password: process.env.STACKHERO_MYSQL_ROOT_PASSWORD,
-  database: process.env.DB_NAME
-})
+;(async () => {
+  try {
+    const session = await mysqlx.getSession({
+      host: process.env.STACKHERO_MYSQL_HOST,
+      port: process.env.STACKHERO_MYSQL_PORT,
+      user: process.env.STACKHERO_MYSQL_USER,
+      password: process.env.STACKHERO_MYSQL_ROOT_PASSWORD,
+      ssl: true
+    })
 
-dbConnection.connect((error) => {
-  if (error) throw error
-  console.log('Successfully connected to the database.')
-})
+    console.log('Successfully connected to the database.')
 
-module.exports = dbConnection
+    await session.close()
+  } catch (err) {
+    console.error('Error connecting to the database:', err)
+    process.exit(1)
+  }
+})()
