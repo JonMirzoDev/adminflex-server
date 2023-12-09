@@ -63,7 +63,13 @@ const login = async (req, res) => {
       expiresIn: '1h'
     })
 
-    res.send({ token: token })
+    res.send({
+      token: token,
+      user: {
+        email: user.email,
+        name: user.name
+      }
+    })
   } catch (error) {
     res.status(500).send(error.message)
   }
