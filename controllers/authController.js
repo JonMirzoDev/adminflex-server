@@ -6,7 +6,7 @@ const Joi = require('joi')
 const registrationSchema = Joi.object({
   name: Joi.string().required(),
   email: Joi.string().email().required(),
-  password: Joi.string().min(6).required()
+  password: Joi.string().min(1).required()
 })
 
 const loginSchema = Joi.object({
@@ -60,7 +60,7 @@ const login = async (req, res) => {
 
     await userModel.updateLastLoginTime(user.id)
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-      expiresIn: '1h'
+      expiresIn: '24h'
     })
 
     res.send({
