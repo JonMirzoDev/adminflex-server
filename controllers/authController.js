@@ -65,10 +65,7 @@ const login = async (req, res) => {
 
     res.send({
       token: token,
-      user: {
-        email: user.email,
-        name: user.name
-      }
+      user: user
     })
   } catch (error) {
     res.status(500).send(error.message)
