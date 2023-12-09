@@ -46,7 +46,8 @@ const findUserByEmail = async (email) => {
       id: userRow[0],
       name: userRow[1],
       email: userRow[2],
-      password: userRow[3]
+      password: userRow[3],
+      status: userRow[5]
     }
     return user
   } catch (error) {
