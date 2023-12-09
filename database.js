@@ -12,8 +12,14 @@ const config = {
 let session = null
 
 const getSession = async () => {
-  if (session === null) {
+  if (session === null || !session.isOpen()) {
+    // Check if the session is open
     try {
+      if (session !== null) {
+        // Close the previous session if it exists and is not open
+        await session.close()
+        console.log('Closed the previous database session.')
+      }
       session = await mysqlx.getSession(config)
       console.log('Successfully connected to the database.')
     } catch (err) {
@@ -32,6 +38,8 @@ const closeSession = async () => {
     } catch (err) {
       console.error('Error closing the database session:', err)
       throw err // Rethrow the error to handle it where closeSession is called
+    } finally {
+      session = null // Ensure session is set to null after closing
     }
   }
 }
